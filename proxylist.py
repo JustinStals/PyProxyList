@@ -12,73 +12,75 @@ def get_proxies(usa=True, international=True):
 	proxies = {}
 
 	if usa:
+
 		res = requests.get('https://www.us-proxy.org/', headers=hdr)
 		soup = BeautifulSoup(res.text, "html.parser")
 
 		for items in soup.select("tbody tr"):
 			proxy = {}
-			i = 0
-			for item in items.select("td"):
-				if i == 0:
-					proxy['ip'] = item.text
-				elif i == 1:
-					proxy['port'] = item.text
-				elif i == 2:
-					proxy['country_code'] = item.text
-				elif i == 3:
-					proxy['country'] = 'United States'
-				elif i == 4:
-					proxy['anonymity'] = item.text
-				elif i == 5:
-					proxy['google'] = item.text
-				elif i == 6:
-					proxy['https'] = item.text
-				elif i == 7:
-					proxy['last_checked'] = item.text
-				i+=1
+			
+			try:
+
+				proxy['ip'] = items.select("td")[0].text
+				proxy['port'] = items.select("td")[1].text
+				proxy['country_code'] = items.select("td")[2].text
+				proxy['country'] = 'United States'
+				proxy['anonymity'] = items.select("td")[4].text
+				proxy['google'] = items.select("td")[5].text
+				proxy['https'] = items.select("td")[6].text
+				proxy['last_checked'] = items.select("td")[7].text
+
+			except:
+
+				pass
 
 			if proxy['anonymity'] == 'elite proxy' and proxy['https'] == 'yes':
+
 				if proxy['country'] in proxies:
+
 					proxies[proxy['country']].append(proxy)
+
 				else:
+
 					proxies[proxy['country']] = [proxy]
 
 		print('US proxies pulled in from us-proxy.org')
 
 	if international:
+
 		res = requests.get('https://free-proxy-list.net/', headers=hdr)
 		soup = BeautifulSoup(res.text, "html.parser")
 
 		for items in soup.select("tbody tr"):
+
 			proxy = {}
-			i = 0
-			for item in items.select("td"):
-				if i == 0:
-					proxy['ip'] = item.text
-				elif i == 1:
-					proxy['port'] = item.text
-				elif i == 2:
-					proxy['country_code'] = item.text
-				elif i == 3:
-					proxy['country'] = item.text
-				elif i == 4:
-					proxy['anonymity'] = item.text
-				elif i == 5:
-					proxy['google'] = item.text
-				elif i == 6:
-					proxy['https'] = item.text
-				elif i == 7:
-					proxy['last_checked'] = item.text
-				i+=1
+
+			try:
+				
+				proxy['ip'] = items.select("td")[0].text
+				proxy['port'] = items.select("td")[1].text
+				proxy['country_code'] = items.select("td")[2].text
+				proxy['country'] = items.select("td")[3].text
+				proxy['anonymity'] = items.select("td")[4].text
+				proxy['google'] = items.select("td")[5].text
+				proxy['https'] = items.select("td")[6].text
+				proxy['last_checked'] = items.select("td")[7].text
+
+			except:
+
+				pass
 
 			if proxy['anonymity'] == 'elite proxy' and proxy['https'] == 'yes':
+
 				if proxy['country'] in proxies:
+
 					proxies[proxy['country']].append(proxy)
+
 				else:
+
 					proxies[proxy['country']] = [proxy]
 
 		print('International proxies pulled in from free-proxy-list.net')
-
 
 	print('Proxies available:')
 	
